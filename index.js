@@ -11,7 +11,7 @@ if (!input) {
 const output = `dither_${ Date.now() - 1561471500000 }.png`
 
 // dithering function, working off a sharp.js meta object + buffer data
-const dither = data => {
+const dither = ({height, width, buffer}) => {
 
 	// performs pattern lookup
 	const bayer = (x, y, c0) => {
@@ -35,14 +35,14 @@ const dither = data => {
 	}
 
 	// given Sharp data object with width, height and raw-formatted uint8 buffer
-	for (let y = 0; y < data.height; y++) {
-		for (let x = 0; x < data.width; x++) {
-			let index = x + y * data.width // get position in 1d buffer array
-			data.buffer[index] = bayer(x, y, data.buffer[index])
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) {
+			let index = x + y * width // get position in 1d buffer array
+			buffer[index] = bayer(x, y, buffer[index])
 		}
 	}
 
-	return data.buffer
+	return buffer;
 }
 
 let meta = {}
